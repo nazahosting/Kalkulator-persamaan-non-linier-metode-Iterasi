@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Metode Iterasi</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1 class="judul">Kalkulator Penyelesaian Persamaan Non-Linier</h1>
+    <h1 style="margin-top: 0px;" class="judul">Dengan Metode Iterasi</h1>
+
+    <div class="container">
+        <label for="initialGuess">Tebakan Awal:</label>
+        <input style="margin-right: 10px;" type="number" id="initialGuess" placeholder="1.0">
+
+        <label for="errorTolerance">Toleransi Kesalahan:</label>
+        <input style="margin-right: 10px;" type="number" id="errorTolerance" placeholder="0.000001">
+
+        <label for="maxIterations">Maksimal Iterasi:</label>
+        <input style="margin-right: 10px;" type="number" id="maxIterations" placeholder="1000">
+
+        <button onclick="solveEquation()">Hitung</button>
+    </div>
+
+    <div class="tabel">
+        <table id="iterationTable">
+            <thead>
+                <tr>
+                    <th>Iterasi</th>
+                    <th>Nilai X</th>
+                    <th>Hasil</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Data iterasi akan ditambahkan ke sini -->
+            </tbody>
+        </table>
+    </div>
+
+
+    <script>
+        function solveEquation() {
+            const initialGuess = parseFloat(document.getElementById("initialGuess").value);
+            const errorTolerance = parseFloat(document.getElementById("errorTolerance").value);
+            const maxIterations = parseInt(document.getElementById("maxIterations").value);
+
+            // Fungsi iterasi g(x)
+            function g(x) {
+                return 1.0 + 1.0 / x; // Ganti dengan fungsi yang sesuai
+            }
+
+            let x0 = initialGuess;
+            let x1;
+            let iteration = 1;
+            let error = 1.0;
+            let output = "Proses Iterasi:<br>";
+
+            const tableBody = document.querySelector("#iterationTable tbody");
+            tableBody.innerHTML = ""; // Mengosongkan tabel sebelum mengisi data
+
+            while (error > errorTolerance && iteration <= maxIterations) {
+                x1 = g(x0);
+                error = Math.abs(x1 - x0);
+                output += `Iterasi ${iteration}: x0 = ${x0}, Hasil = ${x1}<br>`;
+
+                // Menambahkan baris ke tabel
+                const row = tableBody.insertRow();
+                const cell1 = row.insertCell(0);
+                const cell2 = row.insertCell(1);
+                const cell3 = row.insertCell(2);
+
+                cell1.innerHTML = iteration;
+                cell2.innerHTML = x0;
+                cell3.innerHTML = x1;
+
+                x0 = x1;
+                iteration++;
+            }
+
+            if (iteration <= maxIterations) {
+                output += `Akar yang ditemukan: ${x0}<br>`;
+                output += `Iterasi yang diperlukan: ${iteration - 1}`;
+            } else {
+                output += `Metode tidak konvergen setelah ${maxIterations} iterasi.`;
+            }
+
+            document.getElementById("output").innerHTML = output;
+        }
+    </script>
+</body>
+</html>
